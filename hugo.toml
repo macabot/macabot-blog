@@ -1,0 +1,4 @@
+baseURL = 'https://macabot.com/'
+languageCode = 'en-us'
+theme = 'ananke'
+title = 'macabot'
