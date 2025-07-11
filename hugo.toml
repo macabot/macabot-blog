@@ -2,3 +2,11 @@ baseURL = 'https://www.macabot.com/'
 languageCode = 'en-us'
 theme = 'ananke'
 title = 'macabot'
+
+[markup]
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true
+
+[params]
+custom_css = ["custom.css"]
