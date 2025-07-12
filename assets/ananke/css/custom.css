@@ -21,11 +21,3 @@
   margin-left: auto; /* Pushes the bubble to the right */
   text-align: right;
 }
-
-/* Optional: Style sender names */
-.chat-message strong {
-  display: block; /* Puts the name on its own line */
-  margin-bottom: 0.2rem;
-  font-size: 0.9em;
-  color: #555;
-}

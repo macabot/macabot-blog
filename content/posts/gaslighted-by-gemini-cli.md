@@ -71,27 +71,27 @@ restore our entire conversation history between sessions. Each time you start
 However, you can achieve this by using standard shell features to save the session
 log yourself. Here are two common ways to do it in a Linux environment:
 
-1. **Using the `script` command**
+**1. Using the `script` command**
 
 This is the most straightforward method. The `script` command records everything
 printed to your terminal into a file.
 
-1.  **Before starting the CLI**, run this command in your terminal:
+1. **Before starting the CLI**, run this command in your terminal:
 
-    ```sh
-    script gemini-session.log
-    ```
+   ```sh
+   script gemini-session.log
+   ```
 
-2.  This will start a new shell session where all output is being recorded to the
-    file `gemini-session.log`.
-3.  Now, start the Gemini CLI as you normally would.
-4.  When you are finished with our conversation, type `exit` or press `Ctrl-D` to stop
-    the recording.
+2. This will start a new shell session where all output is being recorded to the
+   file `gemini-session.log`.
+3. Now, start the Gemini CLI as you normally would.
+4. When you are finished with our conversation, type `exit` or press `Ctrl-D` to stop
+   the recording.
 
 Next time, you can review `gemini-session.log` to see our previous conversation and
 copy-paste any relevant context to continue where we left off.
 
-2. **Using `tee`**
+**2. Using `tee`**
 
 You can pipe the output of the `gemini-cli` to the `tee` command, which will both display
 the output on your screen and save it to a file.
@@ -263,7 +263,7 @@ I suggested `gemini_logs` as (visible) instead of `.gemini_logs`(hidden) because
 be the one managing the files inside it.** You will be creating new log files, naming
 them, and telling me to read them. It's a directory of your data that you will
 interact with frequently. Making it visible is more convenient for you, just like
-your`Documents` folder.
+your `Documents` folder.
 
 My initial suggestion to use `.gemini` was a misstep because that directory is for the
 application's configuration, not your personal logs. You were right to question that.
@@ -314,7 +314,7 @@ then create the file yourself.
 
 Here is the content:
 
-```md
+````md
 # Gemini CLI Conversation Logs
 
 This directory stores conversation logs for the Gemini CLI to enable
@@ -334,9 +334,10 @@ Choose a descriptive name for your log file, for example,
 `project-name.log`.
 
 Example for a project named "macabot"
-\`\`\`
+
+```sh
 script /home/macabot/gemini_logs/macabot.log
-\`\`\`
+```
 
 After running this command, your terminal session will be recorded.
 You can then start the `gemini-cli` and proceed with your work. When
@@ -349,63 +350,15 @@ context from a previous conversation.
 
 To do this, simply ask Gemini to read the specific log file you
 created.
-9
 
-10 **Example Prompt:**
-11
-12 > "Please read our conversation history from
-`/home/macabot/gemini_logs/macabot.log` to get the context."
-13
-14 Gemini will then read the file and be ready to continue where you
+**Example Prompt:**
+
+> "Please read our conversation history from `/home/macabot/gemini_logs/macabot.log` to get the context."
+
+Gemini will then read the file and be ready to continue where you
 left off.
+````
 
-You can create the file with this command:
-
-    1 cat > /home/macabot/gemini_logs/README.md <<'EOL'
-    2 # Gemini CLI Conversation Logs
-    3
-    4 This directory stores conversation logs for the Gemini CLI to enable
-      session persistence across different terminal sessions.
-    5
-    6 ## How It Works
-    7
-    8 The process involves two steps: saving your session and then loading
-      it in a new session.
-    9
-
-10 ### 1. Saving a Session
-11
-12 Before you start the `gemini-cli`, use the `script` command to record
-your entire terminal session into a log file within this directory.
-13
-14 Choose a descriptive name for your log file, for example,
-`project-name.log`.
-
-Example for a project named "macabot"
-script /home/macabot/gemini_logs/macabot.log
-
-    1
-    2 After running this command, your terminal session will be recorded.
-      You can then start the `gemini-cli` and proceed with your work. When
-      you are done, type `exit` or press `Ctrl-D` to stop the recording.
-    3
-    4 ### 2. Loading a Session
-    5
-    6 The next time you start the `gemini-cli`, you can ask it to load the
-      context from a previous conversation.
-    7
-    8 To do this, simply ask Gemini to read the specific log file you
-      created.
-    9
-
-10 **Example Prompt:**
-11
-12 > "Please read our conversation history from
-`/home/macabot/gemini_logs/macabot.log` to get the context."
-13
-14 Gemini will then read the file and be ready to continue where you
-left off.
-15 EOL
 {{< /chat-left >}}
 
 {{< chat-right >}}
@@ -431,7 +384,7 @@ the different security policies applied to my tools:
     this is a hard-coded boundary to protect your system's integrity.
 
 You've asked if I can read `/home/macabot/gemini_logs/test.txt`. Based on the
-restriction I just described, I expect the read_file tool to fail. However, the best
+restriction I just described, I expect the `read_file` tool to fail. However, the best
 way to be certain is to try.
 
 I will now attempt to read the file at `/home/macabot/gemini_logs/test.txt`.
@@ -450,7 +403,6 @@ direct file manipulation tools are strictly confined to the project you're worki
 This means for our log-file workflow to function, you will need to provide me with
 the content of the log file, as I cannot read it directly myself.
 {{< /chat-left >}}
-```
 
 {{< chat-right >}}
 Ok. So asking you to read a previous conversation from a log file will indeed not work. What about the symlink idea. I could create a symlink to a log file in ~/gemini_logs. If you're able to follow symlinks then you should be able to read the logs. We could even perhaps create a wrapper bash script that prompts me to select a previous conversation (or start a new one), call the script command, start npx gemini-cli, and instruct you to read the symlinked file. Not sure if the gemini-cli can be started with such a prompt or where I need to ask you every time
@@ -511,7 +463,6 @@ SYMLINK_NAME="gemini_session.log"
 # Ensure the log directory exists
 mkdir -p "$LOG_DIR"
 
-
 # List available sessions
 echo "Available sessions in $LOG_DIR:"
 ls -1 "$LOG_DIR" | sed 's/\.log$//'
@@ -556,7 +507,7 @@ echo ""
 script -c "npx gemini-cli" "$LOG_FILE_PATH"
 ```
 
-How this script works:
+**How this script works:**
 
 1.  It lists all your existing log files.
 2.  It asks you to type the name of the session you want to load.
@@ -638,6 +589,9 @@ I agree with your suggestion and have updated the script accordingly.
 - The logic is updated to handle the selection from the filter.
 
 I will now overwrite `start-gemini.sh` with this improved version.
+{{< /chat-left >}}
+
+{{< chat-left >}}
 ✦ The script has been updated with the more intuitive `gum filter` interface.
 
 You can now run `./start-gemini.sh` to see the new and improved session selection menu.
@@ -722,7 +676,7 @@ My apologies for that oversight.
 
 The error `basename: missing operand` happens because:
 
-1.  `ls -1t "$LOG_DIR"/\*.log` finds no `.log` files.
+1.  `ls -1t "$LOG_DIR"/*.log` finds no `.log` files.
 2.  It therefore prints nothing (an empty string) to the pipe.
 3.  xargs receives this empty input and still tries to run the `basename` command, but
     without any file path to operate on.
@@ -898,6 +852,9 @@ that initializing `CURRENT_SESSION_BASENAME` addresses the immediate issue and
 maintains robustness.
 
 I will now update the `start-gemini.sh` script.
+{{< /chat-left >}}
+
+{{< chat-left >}}
 ✦ The `start-gemini.sh` script has been updated to initialize `CURRENT_SESSION_BASENAME` to
 an empty string, resolving the "unbound variable" error.
 
@@ -930,8 +887,8 @@ Here's the breakdown:
       for my responses.
 
 2.  **Our Wrapper Script (External, Full-Session LLM Context):**
-    - Our wrapper script uses the script command to capture the entire terminal
-      **session output** (your input, my responses, tool calls, tool outputs, and even
+    - Our wrapper script uses the `script` command to capture the **entire terminal
+      session output** (your input, my responses, tool calls, tool outputs, and even
       shell prompts) to an **external file that you control**.
     - The core idea is to then explicitly tell _me_ (the LLM) to `read_file` that
       external log. This ensures that my internal context window is populated with
@@ -1009,8 +966,8 @@ You are not confused; my previous answer was.
 
 This is the critical question. Does the existence of `/chat` make our script redundant?
 
-**No, and now the value of our script becomes even clearer.** It's not about enabling
-persistence (since `/chat` does that), but about improving it.
+**No, and now the value of our script becomes even clearer.** It's not about _enabling_
+persistence (since `/chat` does that), but about _improving_ it.
 
 Here are the advantages of our `start-gemini.sh` script over using the built-in `/chat`
 commands manually:
@@ -1023,7 +980,7 @@ commands manually:
     them up with Git, and see the entire session—including tool calls and outputs.
     The `/chat` command saves to an internal, opaque format that you don't directly
     control.
-3.  **Complete Context Capture:** The `script` command captures everything that happens in
+3.  **Complete Context Capture:** The `script` command captures _everything_ that happens in
     the terminal. The internal `/chat save` might only save the conversational turns,
     potentially missing the rich context of tool outputs or errors, which can be
     crucial for complex tasks.
