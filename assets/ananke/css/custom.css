@@ -1,23 +1,27 @@
-/* General chat message styling */
+.chat-conversation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
 .chat-message {
-  padding: 1rem;
-  margin-bottom: 0.8rem;
-  border-radius: 0.5rem;
-  max-width: 70%; /* Limit width for chat bubbles */
-  word-wrap: break-word; /* Ensure long words wrap */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.6rem;
+  border-radius: 0.9rem;
+  max-width: 75%;
+  word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  display: inline-block;
 }
 
-/* Styling for messages from the other person (left-aligned) */
 .chat-left {
-  background-color: #e0e0e0; /* Light grey for other person */
-  margin-right: auto; /* Pushes the bubble to the left */
-  text-align: left;
+  background-color: #e0e0e0;
+  align-self: flex-start;
 }
 
-/* Styling for your messages (right-aligned) */
 .chat-right {
-  background-color: #dcf8c6; /* Light green for your messages */
-  margin-left: auto; /* Pushes the bubble to the right */
-  text-align: right;
+  background-color: #dcf8c6;
+  align-self: flex-end;
 }

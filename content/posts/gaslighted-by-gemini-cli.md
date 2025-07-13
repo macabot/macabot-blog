@@ -4,6 +4,8 @@ draft = true
 title = 'Gaslighted by gemini-cli'
 +++
 
+{{< chat-block >}}
+
 {{< chat-right >}}
 Summarize what we've discussed previously
 {{< /chat-right >}}
@@ -1037,3 +1039,5 @@ Thank you for your patience and for taking the time to investigate this and prov
 such clear feedback. It is genuinely helpful. I will be here to help with any other
 tasks you have, operating with this improved understanding.
 {{< /chat-left >}}
+
+{{< /chat-block >}}
