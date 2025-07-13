@@ -4,6 +4,17 @@ draft = true
 title = 'Gaslighted by gemini-cli'
 +++
 
+A few days ago, I decided to try out the [gemini-cli](https://github.com/google-gemini/gemini-cli).
+I spent a couple of hours prompting the gemini-cli to build a linter for a library I've been working on, when I decided it was time to wrap up and head to bed. Then it struck me: will Gemini remember our conversation the next time I continue? So I decided to ask it: "Will you remember our conversation the next time I continue?"
+
+Now, I don't recall exactly what Gemini said, but it was something like
+
+> Yes, of course I'll remember our conversation. You have nothing to worry about! We can continue where we left off and everything will be great. This is definitely not a lie that will lead to a bunch of wasted time and eventually you writing a blog post about it.
+
+Great! I shut down my laptop, go to bed and fall into a deep sleep, without a worry on my mind. Because, after all, tomorrow I can continue were I left off.
+
+## The following day
+
 {{< chat-block >}}
 
 {{< chat-right >}}
@@ -17,6 +28,17 @@ Summarize what we've discussed previously
 {{< chat-right >}}
 Is our conversation perhaps scoped by directory? At the end of our previous conversation I asked whether you would remember our conversation. You said you would.
 {{< /chat-right >}}
+
+{{< /chat-block >}}
+
+So, it didn't remember after all, \*sigh\*.
+This wasn't terrible---the work spent on the linter was stored safely in a repository---but it was very annoying, nonetheless. I asked if it would remember, it told me it _would_, but then it didn't.
+
+Apart from the blatant lie, I did prefer the gemini-cli over the VSCode plugin. This wasn't a big surprise, as I like the terminal. The gemini-cli would stay. Sure it has some issues, but if I put in the effort "I can fix him".
+
+{{< details summary="Gemini explains it can save facts to memory, but it can't retain the history of a conversation." >}}
+
+{{< chat-block >}}
 
 {{< chat-left >}}
 ✦ You are correct to ask. Our conversations are scoped to the current session.
@@ -60,6 +82,12 @@ This is different from our conversation history, which is temporary and resets w
 each new session. The `save_memory` tool is for persisting specific, important details
 you want me to recall in the future.
 {{< /chat-left >}}
+
+{{< /chat-block >}}
+
+{{< /details >}}
+
+{{< chat-block >}}
 
 {{< chat-right >}}
 How can I persist our conversation history? I want to continue a conversation where we left off the next time I run the gemini-cli.
@@ -105,6 +133,54 @@ gemini-cli | tee gemini-session.log
 This method saves the output as it happens. When you close the CLI, the file will
 contain the full log.
 {{< /chat-left >}}
+
+{{< /chat-block >}}
+
+See. It isn't so bad. I'll just write a little bash script wrapper around the gemini-cli. Before you know it, we'll be having happy conversations that span days on end.
+
+So, what happened next is that my pal Gemini and I set to work to create the wrapper script. You can open the expand, if you're interested in the full conversation. If not, here's the 80s 30 second montage equivalent:
+
+> \> Instead of copying over a log file, could you simply read it?
+
+> ✦ Great idea! I can't automatically detect and load a previous session, but you can ask me to read a log file.
+
+> \> The gemini-cli only has access to the directory where it is started. I might want to run gemini-cli from different directories, but use the same session.log file. How should I solve this? Should I create a symlink to the session-storage directory?
+
+> ✦ That’s an excellent question. We'll create A Centralized Log File in Your Home Directory.
+
+> \> Add a README.md to the gemini_logs directory explaining how this should work.
+
+> ✦ Here is the content: ...
+
+> \> You can't read the centrally stored log file. Let's create a wrapper bash script that prompts me to select a previous conversation (or start a new one), call the `script` command, start `npx gemini-cli`, and instruct you to read the symlinked log file.
+
+> ✦ You've thought this through perfectly. Here is a bash script that implements your idea: ...
+
+> \> The gemini-cli should actually be called like this: ... Prompt me to to give a new session a name. Store the logs in lower_snake_case. Let's use [gum](https://github.com/charmbracelet/gum) to make a pretty script.
+
+> ✦ Excellent. Applying changes...
+
+> \> Change the ordering of the session!
+
+> ✦ Yes!
+
+> \> Fix these errors
+
+> ✦ Done!
+
+> \> There are more errors
+
+> ✦ Fixing...
+
+> \> There are still errors
+
+> ✦ Sorry! Fixing...
+
+TODO the final script, useless as it is, can be found here.
+
+{{< details summary="Conversation building the wrapper script" >}}
+
+{{< chat-block >}}
 
 {{< chat-right >}}
 Instead of copying previous conversation from a log file, could you simply read the log file?
@@ -618,8 +694,7 @@ I will now modify the script to add `--height 10` to the `gum filter` command.
 {{< /chat-left >}}
 
 {{< chat-right >}}
-What does the height flag do? What if I have more than 10 sessions stored. Will │
-│ they not all be shown?
+What does the height flag do? What if I have more than 10 sessions stored. Will they not all be shown?
 {{< /chat-right >}}
 
 {{< chat-left >}}
@@ -862,6 +937,12 @@ an empty string, resolving the "unbound variable" error.
 
 Please try running the script again. Let me know if you encounter any further issues.
 {{< /chat-left >}}
+
+{{< /chat-block >}}
+
+{{< /details >}}
+
+{{< chat-block >}}
 
 {{< chat-right >}}
 When I type /help I see this option: /chat - Manage conversation history. Usage: /chat \<list|save|resume\> \<tag\> . Have we been building the wrapper for nothing!?

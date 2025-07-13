@@ -4,6 +4,8 @@
   align-items: flex-start;
   width: 100%;
   margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #d3d3d3;
 }
 
 .chat-message {
