@@ -321,39 +321,20 @@ Okay. While we've created the cli wrapper, THIS conversation will be lost unless
 
 Unfortunately, I cannot directly "copy all its content we've written to a file" and
 then place it in your `~/gemini_logs` directory. My write_file tool is restricted to
-the current project directory (`/home/macabot/repos/github.com/macabot`), and I
+the current project directory, and I
 don't have a tool to access my own internal conversation history and output it as a
 single block of text.
 
 However, you can easily save this conversation yourself using your terminal's
-scrollback buffer or by using the script command as we discussed.
+scrollback buffer or by using the `script` command as we discussed.
 
-To save this conversation:
-
-1.  If you started this session with `script`: The entire conversation is already
-    being saved to the log file you specified when you started this session. You
-    just need to type exit or press Ctrl-D when you're done to close the script
-    session.
-2.  If you did NOT start this session with `script`:
-    - You can usually scroll up in your terminal to select and copy the entire
-      conversation.
-    - Then, you can manually paste it into a new file in your ~/gemini_logs
-      directory. For example:
-
-```sh
-cat > ~/gemini_logs/this_conversation.log
-# PASTE THE CONVERSATION HERE
-# Press Ctrl+D when done
-```
-
-This is the most reliable way to ensure this specific conversation is saved.
 {{< /chat-left >}}
 
 {{< /chat-block >}}
 
 And so I did. I scrolled _all_ the back in my terminal to the moment I started the gemini-cli and copied the content into a log file.
 
-It was really late at this point and I decided this was enough for today.
+It was late at this point and I decided this was enough for today.
 
 ## July 7th
 
@@ -464,7 +445,11 @@ would you like to make any further changes to our script?
 {{< /chat-left >}}
 
 {{< chat-right >}}
-Well, our script doesn't work. It uses the bash `script` command which overwrites the previous history. Also, the log is full of noise: A lot of special ANSI codes and it's formatted in a way that looks good for me, but is not likely structure in a way that is easily understood by you (e.g. which part is the prompt and which part is the response). So, for now I'll just try to use /chat. I won't ask whether you remember our previous conversation as that seems to confuse you. I've just run the /chat resume command in another terminal window and asked you to summarize our script and you were able to do so perfectly fine. I guess, in general, the difficulty talking to you is that you don't know the EXACT behaviour of the cli you're run with. But you also don't seem to know that you don't know and will just act as if you do know, making things up as you go. I have to keep reminding myself that the cli and llm are 2 separate things.
+Well, our script doesn't work. It uses the bash `script` command which overwrites the previous history. Also, the log is full of noise: A lot of special ANSI codes and it's formatted in a way that looks good for me, but is not likely structure in a way that is easily understood by you (e.g. which part is the prompt and which part is the response). So, for now I'll just try to use /chat. I won't ask whether you remember our previous conversation as that seems to confuse you.
+
+I've just run the /chat resume command in another terminal window and asked you to summarize our script and you were able to do so perfectly fine.
+
+I guess, in general, the difficulty talking to you is that you don't know the EXACT behaviour of the cli you're run with. But you also don't seem to know that you don't know and will just act as if you do know, making things up as you go. I have to keep reminding myself that the cli and llm are 2 separate things.
 {{< /chat-right >}}
 
 {{< chat-left >}}
