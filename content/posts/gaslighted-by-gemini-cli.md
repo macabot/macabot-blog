@@ -11,11 +11,25 @@ title = 'Gaslighted by gemini-cli'
 ## July 5th
 
 On July 5th, I decided to try out the [gemini-cli](https://github.com/google-gemini/gemini-cli): an AI agent for your terminal.
-I spent a couple of hours prompting the gemini-cli to build some software (a.k.a. "vibe coding"), when I decided it was time to wrap up and head to bed. Then it struck me: will Gemini remember our conversation the next time I continue? So I decided to ask it: "Will you remember our conversation the next time I continue?"
+I spent a couple of hours prompting the gemini-cli to build some software (a.k.a. "vibe coding"), when I decided it was time to wrap up and head to bed. Then it struck me: will Gemini remember our conversation the next time I continue? So I decided to ask it:
 
-Now, I don't recall exactly what Gemini said, but it was something like
+{{< chat-block >}}
 
-> Yes, of course I'll remember our conversation. You have nothing to worry about! We can continue where we left off and everything will be great. This is definitely not a lie that will lead to a bunch of wasted time and eventually you writing a blog post about it.
+{{< chat-right >}}
+Will you remember our conversation the next time I continue?
+{{< /chat-right >}}
+
+{{< /chat-block >}}
+
+Now, I don't recall Gemini's exact words, but it was something like:
+
+{{< chat-block >}}
+
+{{< chat-left >}}
+✦ Yes, of course I'll remember our conversation. You have nothing to worry about! We can continue where we left off and everything will be great. This is definitely not a lie that will lead to a bunch of wasted time and you eventually writing a blog post about it.
+{{< /chat-left >}}
+
+{{< /chat-block >}}
 
 Great! I shut down my laptop, go to bed and fall into a deep sleep, without a worry on my mind. Because, after all, tomorrow I can continue were I left off.
 
@@ -32,7 +46,7 @@ Summarize what we've discussed previously
 {{< /chat-left >}}
 
 {{< chat-right >}}
-Is our conversation perhaps scoped by directory? At the end of our previous conversation I asked whether you would remember our conversation. You said you would.
+At the end of our previous conversation I asked whether you would remember our conversation. You said you would.
 {{< /chat-right >}}
 
 {{< /chat-block >}}
@@ -56,7 +70,9 @@ restore our entire conversation history between sessions. Each time you start
 `gemini-cli`, we begin a new, fresh interaction.
 
 However, you can achieve this by using standard shell features to save the session
-log yourself. Here are two common ways to do it in a Linux environment:
+log yourself.
+
+{{< details summary="Here are two common ways to do it in a Linux environment:" >}}
 
 **1. Using the `script` command**
 
@@ -89,11 +105,18 @@ gemini-cli | tee gemini-session.log
 
 This method saves the output as it happens. When you close the CLI, the file will
 contain the full log.
+
+{{< /details >}}
+
 {{< /chat-left >}}
 
 {{< /chat-block >}}
 
-See. It isn't so bad. I'll just write a little wrapper script around the gemini-cli to store our conversation in a log file. Before you know it, we'll be having happy conversations that span days on end.
+Okay, so it doesn't support storing a conversation. To make sure, I did a little search and found this corresponding GitHub issue: [Feature Request: Conversation History Export](https://github.com/google-gemini/gemini-cli/issues/2554)
+
+> Currently, there is no built-in functionality within the Gemini CLI to export or save the entire conversation history of a session. Once a session ends, the interaction history is lost, requiring manual copying from the terminal if a record is desired.
+
+This seemed like the functionality I was looking for. I could have waited for it to be implemented, but instead I decided I would write a little wrapper script around the gemini-cli to store our conversation in a log file. Before you know it, we'll be having happy conversations that span days on end.
 
 And who better to help me write this script than my pal Gemini!
 The following is the long and short of our vibe coding session:
@@ -109,7 +132,7 @@ Instead of copying over a log file, could you simply read it?
 {{< /chat-left >}}
 
 {{< chat-right >}}
-I might want to run gemini-cli from different directories, but use the same session.log file. How should I solve this?
+I might want to run gemini-cli from different directories, but use the same log file. How should I solve this?
 {{< /chat-right >}}
 
 {{< chat-left >}}
@@ -166,9 +189,137 @@ There are still errors
 
 {{< /chat-block >}}
 
-TODO the final script, useless as it is, can be found here.
+{{< details summary="The start-gemini.sh script" >}}
 
-At this point, I've forgotten _why_ I typed the `/help` command. Maybe I've forgotten how to switch between shell mode and prompt mode. Maybe I was just curious. Either way, it turned out to be a pivotal moment.
+```sh
+#!/bin/bash
+
+set -euo pipefail
+shopt -s inherit_errexit
+
+# Check if gum is installed
+if ! command -v gum &> /dev/null
+then
+    echo "Error: gum is not installed."
+    echo "Please install it from https://github.com/charmbracelet/gum to continue."
+    exit 1
+fi
+
+# --- Configuration ---
+LOG_DIR="$HOME/gemini_logs"
+SYMLINK_NAME="gemini_session.log"
+CLI_COMMAND="npx https://github.com/google-gemini/gemini-cli"
+
+# --- Script ---
+mkdir -p "$LOG_DIR"
+
+gum style --border normal --margin "1" --padding "1 2" --border-foreground 212 "Gemini CLI Session Manager"
+
+CREATE_NEW_OPTION="-- Create a new session --"
+
+LOG_FILE_PATH=""
+INSTRUCTION_PROMPT=""
+SESSION_CONTINUED=false
+CURRENT_SESSION_BASENAME=""
+
+# --- Check for existing symlink and prompt to continue ---
+if [ -L "./$SYMLINK_NAME" ]; then
+    CURRENT_SYMLINK_TARGET=$(readlink -f "./$SYMLINK_NAME")
+    if [ -f "$CURRENT_SYMLINK_TARGET" ]; then
+        CURRENT_SESSION_BASENAME=$(basename "$CURRENT_SYMLINK_TARGET" .log)
+        gum style "It looks like you were working on session: $(gum style --bold "$CURRENT_SESSION_BASENAME")"
+        gum style "Do you want to continue this session, or pick another?"
+
+        CHOICE=$(gum choose "Continue this session" "Pick another session" "Create a new session")
+
+        if [ "$CHOICE" == "Continue this session" ]; then
+            LOG_FILE_PATH="$CURRENT_SYMLINK_TARGET"
+            INSTRUCTION_PROMPT="Please read the conversation history from ./$SYMLINK_NAME"
+            SESSION_CONTINUED=true
+            gum style "Continuing session: $(gum style --bold "$CURRENT_SESSION_BASENAME")"
+        elif [ "$CHOICE" == "Pick another session" ]; then
+            gum style "Okay, let's pick a different session."
+        else # Create a new session
+            gum style "Okay, let's create a new session."
+        fi
+    fi
+fi
+
+# --- If not continuing, or if symlink was not valid, prompt for selection ---
+if [ -z "$LOG_FILE_PATH" ]; then
+    # Get existing session log basenames, sorted by modification time (newest first).
+    # Handle case where no .log files exist gracefully.
+    EXISTING_SESSIONS=""
+    if compgen -G "$LOG_DIR"/*.log > /dev/null; then
+        EXISTING_SESSIONS=$(ls -1t "$LOG_DIR"/*.log | xargs -r -n 1 basename)
+    fi
+
+    # Filter out the current session if it was offered for continuation but declined
+    if [ "$SESSION_CONTINUED" == "false" ] && [ -n "$CURRENT_SESSION_BASENAME" ]; then
+        EXISTING_SESSIONS=$(echo "$EXISTING_SESSIONS" | grep -v "^$CURRENT_SESSION_BASENAME$" || true)
+    fi
+
+    # Combine the "create new" option with existing sessions and pipe to gum filter
+    SELECTION=$(printf "%s\n%s" "$CREATE_NEW_OPTION" "$EXISTING_SESSIONS" | gum filter --height 10 --placeholder "Choose a session, or type to filter...")
+
+    # Exit if the user pressed <esc> or made no selection
+    if [ -z "$SELECTION" ]; then
+        gum style --foreground "99" "No selection made. Exiting."
+        exit 0
+    fi
+
+    if [ "$SELECTION" == "$CREATE_NEW_OPTION" ]; then
+        gum style "Let's create a new session."
+        SESSION_NAME_INPUT=$(gum input --placeholder "Enter a name for the new session...")
+
+        if [ -z "$SESSION_NAME_INPUT" ]; then
+            gum style --foreground "99" "No session name provided. Exiting."
+            exit 1
+        fi
+
+        # Convert the input name to lower_snake_case
+        SESSION_NAME=$(echo "$SESSION_NAME_INPUT" | tr '[:upper:]' '[:lower:]' | tr -s ' ' '_' | sed 's/[^a-z0-9_]/_/g')
+        LOG_FILE_PATH="$LOG_DIR/$SESSION_NAME.log"
+
+        gum style "New session will be saved to: $(gum style --bold "$LOG_FILE_PATH")"
+    else
+        # User selected an existing log file
+        LOG_FILE_PATH="$LOG_DIR/$SELECTION"
+        INSTRUCTION_PROMPT="Please read the conversation history from ./$SYMLINK_NAME"
+        gum style "Loading session from: $(gum style --bold "$LOG_FILE_PATH")"
+    fi
+fi
+
+# Create a symlink in the current directory to the chosen log file.
+# -s for symbolic, -f to overwrite if it already exists.
+ln -sf "$LOG_FILE_PATH" "./$SYMLINK_NAME"
+
+# --- Display final instructions using gum ---
+TERMINAL_WIDTH=$(tput cols)
+# Calculate width for gum style, accounting for padding and borders
+BOX_WIDTH=$((TERMINAL_WIDTH - 4)) # 2 for padding, 2 for border
+
+gum style --border double --margin "1" --padding "1 2" --border-foreground 212 --width "$BOX_WIDTH" "READY TO START" "The environment is set up."
+
+if [ -n "$INSTRUCTION_PROMPT" ]; then
+    gum style --bold --foreground "42" "When the Gemini CLI launches, you must provide the following prompt to load the session:"
+    gum style --bold --foreground "42" "$INSTRUCTION_PROMPT"
+else
+    gum style --bold --foreground "42" "Starting a new session. No history to load."
+fi
+echo ""
+
+# Give the user a moment to read and a clear action to proceed.
+gum confirm "Press Enter to start the session recording..." || exit 0
+
+# Start recording the session and launch the Gemini CLI
+# The `-c` flag tells `script` to run the command.
+script -c "$CLI_COMMAND" "$LOG_FILE_PATH"
+```
+
+{{< /details >}}
+
+I've set up my wrapper script and feel happy about it. It feels like it's almost done. Then I type the `/help` command. I've forgotten _why_ I did so. Maybe I'd forgotten how to exit the gemini-cli. Or maybe I was just curious. Either way, it turned out to be a pivotal moment.
 
 {{< chat-block >}}
 
@@ -215,7 +366,7 @@ potential overlap, but also a crucial distinction.
 No, we haven't been building the wrapper for nothing. The `/chat` command you see in
 the `gemini-cli` and our wrapper script serve **different, complementary purposes**.
 
-Here's the breakdown:
+{{< details summary="Here's the breakdown:" >}}
 
 1.  **The \`/chat\` command (Internal CLI History Management):**
 
@@ -250,6 +401,8 @@ Here's the breakdown:
         CLI's internal `/chat` command might not provide in the same comprehensive
         way.
 
+{{< /details >}}
+
 In essence, the `/chat` command is for the CLI's internal state, while our wrapper
 script is designed to provide me with the rich, external context of our entire
 terminal interaction.
@@ -282,7 +435,7 @@ This is all very strange. I have a feeling Gemini might be telling me another li
 
 {{< /chat-block >}}
 
-Next, I open a the gemini-cli in a new terminal window to see if the `/chat` feature works as I would have expected it to work---or if, as Gemini puts it, it is only for the CLI's internal state.
+Next, I opened a the gemini-cli in a new terminal window to see if the `/chat` feature works as I would have expected it to work---or if, as Gemini puts it, it is only for the CLI's internal state.
 
 {{< chat-block >}}
 
@@ -308,7 +461,7 @@ To help me understand what you'd like me to summarize, could you please provide 
 
 Okay. I guess Gemini was right. The `/chat` feature is not what I thought it would be. We didn't write the wrapper script for nothing.
 
-I switch back to my original conversation:
+I switch back to our original conversation:
 
 {{< chat-block >}}
 
@@ -326,7 +479,7 @@ don't have a tool to access my own internal conversation history and output it a
 single block of text.
 
 However, you can easily save this conversation yourself using your terminal's
-scrollback buffer or by using the `script` command as we discussed.
+scrollback buffer.
 
 {{< /chat-left >}}
 
@@ -334,16 +487,16 @@ scrollback buffer or by using the `script` command as we discussed.
 
 And so I did. I scrolled _all_ the back in my terminal to the moment I started the gemini-cli and copied the content into a log file.
 
-It was late at this point and I decided this was enough for today.
+I decided I was done for the day.
 
 ## July 7th
 
 This detour of creating a wrapper script for the gemini-cli has taken long enough. Let's wrap it up and get back to working on the software that started this whole side-quest in the first place.
 
 However, something still didn't feel right.
-Why would the gemini-cli implement a `/chat list|save|resume` feature if it wasn't for the purpose of storing your conversation?
+Why would the gemini-cli implement a `/chat list|save|resume` feature if it couldn't be used by the Gemini LLM?
 
-I decide to test the `/chat` feature again:
+I decided to test the `/chat` feature again:
 
 {{< chat-block >}}
 
@@ -392,7 +545,7 @@ and
 
 > you would still need to use the method our script facilitates: ask me to read the log file from your filesystem.
 
-I have not mentioned this to you in the current session. The only things I did was start gemini-cli, run /chat resume, ask you whether you recall our conversation and lastly type this current message. It seems neither of us knows what is going on or understands how the /chat command really works.
+I have not mentioned this to you in the current session. The only things I did was start gemini-cli, run /chat resume, ask you whether you recall our conversation and, lastly, type this current message. It seems neither of us knows what is going on or understands how the /chat command really works.
 {{< /chat-right >}}
 
 {{< chat-left >}}
@@ -417,8 +570,7 @@ This is the critical question. Does the existence of `/chat` make our script red
 **No, and now the value of our script becomes even clearer.** It's not about _enabling_
 persistence (since `/chat` does that), but about _improving_ it.
 
-Here are the advantages of our `start-gemini.sh` script over using the built-in `/chat`
-commands manually:
+{{< details summary="Here are the advantages of our `start-gemini.sh` script over using the built-in `/chat` commands manually:" >}}
 
 1.  **Superior User Experience:** Our script provides a beautiful, interactive `gum`
     interface. You get a scrollable, filterable menu to choose your session instead
@@ -435,6 +587,8 @@ commands manually:
 4.  **Automation:** Our script automates the entire setup process—choosing the session,
     starting the recording, and providing the initial prompt if needed.
 
+{{< /details >}}
+
 In short: The `/chat` command provides the basic function, but **our script provides a
 powerful, user-friendly, and robust workflow on top of it.**
 
@@ -445,7 +599,7 @@ would you like to make any further changes to our script?
 {{< /chat-left >}}
 
 {{< chat-right >}}
-Well, our script doesn't work. It uses the bash `script` command which overwrites the previous history. Also, the log is full of noise: A lot of special ANSI codes and it's formatted in a way that looks good for me, but is not likely structure in a way that is easily understood by you (e.g. which part is the prompt and which part is the response). So, for now I'll just try to use /chat. I won't ask whether you remember our previous conversation as that seems to confuse you.
+Well, our script doesn't work. It uses the bash `script` command which overwrites the previous history. Also, the log is full of noise: A lot of special ANSI codes and it's formatted in a way that looks good to me, but is not likely structure in a way that is easily understood by you (e.g. which part is the prompt and which part is the response). So, for now I'll just try to use /chat. I won't ask whether you remember our previous conversation as that seems to confuse you.
 
 I've just run the /chat resume command in another terminal window and asked you to summarize our script and you were able to do so perfectly fine.
 
@@ -492,4 +646,37 @@ tasks you have, operating with this improved understanding.
 
 {{< /chat-block >}}
 
-\*sigh\*
+\*sigh\*. Turns out, we wrote the wrapper script for nothing after all.
+
+## Making sense of it all
+
+Let's try to make sense of everything that happened:
+
+- **July 5th:** Gemini tells me it will remember our conversation.
+- **July 6th:** I find out Gemini has lied to me.
+- Gemini lies to me again when it says there is no built-in mechanism for the gemini-cli to persist a conversation. This seems to be backed up by the [GitHub issue](https://github.com/google-gemini/gemini-cli/issues/2554).
+- I find out about the `/chat` command and confront Gemini. Gemini tries to reassure me that the `/chat` command does not do what I think it does. We've not written the wrapper script for nothing.
+- I test the `/chat` command and am surprises to see that it indeed doesn't work.
+- **July 7th:** I run `/chat resume` again and ask Gemini if it recalls our conversation. It says it doesn't but slips up by mentioning things it shouldn't be able to know. It still tries to convince me that the wrapper script was not for nothing.
+- After a final confrontation, Gemini gives in and admits that the `/chat` command is the best option. After all this time, the wrapper script _was_ for nothing.
+
+Let's Q&A:
+
+### Why did Gemini initially say it would remember the conversation?
+
+I don't know.
+
+### Why does Gemini not know about the `/chat` command?
+
+Gemini, the LLM, doesn't know how the gemini-cli works.
+However, instead of telling you that it lacks the knowledge, it will hallucinate an answer. This turns out to be a problem for the gullable person that I am.
+
+### Why did Gemini claim to not remember the conversation when running the `/chat resume` command?
+
+I think this is due to my poorly chosen words.
+
+> Summarize our previous conversation
+
+From _my_ point of view, we've had a conversation, I ran the `/chat save` command, went to bed, got up, and then ran the `/chat resume`---before asking about our previous conversation.
+
+From Gemini's point of view, no time has elapsed between me saving the conversation and resuming the conversation. As far as it's concerned, we're still working on the wrapper script, when out of the blue, I ask about a previous conversation. I imagine it thinking "Previous conversation? What previous conversation? The only conversation I know of is the conversation we're having right now."
