@@ -11,12 +11,12 @@ title = 'Gaslighted by gemini-cli'
 ## July 5th
 
 On July 5th, I decided to try out the [gemini-cli](https://github.com/google-gemini/gemini-cli): an AI agent for your terminal.
-I spent a couple of hours prompting the gemini-cli to build some software (a.k.a. "vibe coding"), when I decided it was time to wrap up and head to bed. Then it struck me: will Gemini remember our conversation the next time I continue? So I decided to ask it:
+I spent a couple of hours vibe coding---prompting the gemini-cli to write code for me---when I decided it was time to wrap up and head to bed. Then it struck me: will Gemini remember our conversation the next time I continue? I decided to ask it:
 
 {{< chat-block >}}
 
 {{< chat-right >}}
-Will you remember our conversation the next time I continue?
+Will you remember our conversation the next time we continue?
 {{< /chat-right >}}
 
 {{< /chat-block >}}
@@ -52,9 +52,9 @@ At the end of our previous conversation I asked whether you would remember our c
 {{< /chat-block >}}
 
 So, it didn't remember after all, \*sigh\*.
-This wasn't terrible---the work spent on the software we wrote was stored safely in a repository---but it was very annoying, nonetheless: I asked if it would remember, it told me it _would_, but then it didn't.
+This wasn't terrible---the vibe coded work was safely stored in a repository---but it was very annoying, nonetheless: I asked if it would remember, it told me it _would_, but then it didn't.
 
-Apart from the blatant lie, I did prefer the gemini-cli over the Gemini VSCode plugin. This wasn't a big surprise, as I like the terminal. For now, the gemini-cli would stay. Sure it has some issues, but if I put in the effort "I can fix him".
+Apart from the blatant lie, I did like using the gemini-cli. This didn't come as much of a surprise, for I like the terminal. For now, the gemini-cli would stay. Sure it has some issues, but if I put in the effort "I can fix him".
 
 There must be a way for it to remember our conversation:
 
@@ -91,9 +91,6 @@ printed to your terminal into a file.
 4. When you are finished with our conversation, type `exit` or press `Ctrl-D` to stop
    the recording.
 
-Next time, you can review `gemini-session.log` to see our previous conversation and
-copy-paste any relevant context to continue where we left off.
-
 **2. Using `tee`**
 
 You can pipe the output of the `gemini-cli` to the `tee` command, which will both display
@@ -108,6 +105,9 @@ contain the full log.
 
 {{< /details >}}
 
+Next time, you can review `gemini-session.log` to see our previous conversation and
+copy-paste any relevant context to continue where we left off.
+
 {{< /chat-left >}}
 
 {{< /chat-block >}}
@@ -116,7 +116,7 @@ Okay, so it doesn't support storing a conversation. To make sure, I did a little
 
 > Currently, there is no built-in functionality within the Gemini CLI to export or save the entire conversation history of a session. Once a session ends, the interaction history is lost, requiring manual copying from the terminal if a record is desired.
 
-This seemed like the functionality I was looking for. I could have waited for it to be implemented, but instead I decided I would write a little wrapper script around the gemini-cli to store our conversation in a log file. Before you know it, we'll be having happy conversations that span days on end.
+This seemed like the functionality I was looking for. I could wait for it to be implemented, but instead I decided I would write a little wrapper script around the gemini-cli to store our conversation in a log file. Before you know it, we'll be having happy conversations that span days on end.
 
 And who better to help me write this script than my pal Gemini!
 The following is the long and short of our vibe coding session:
@@ -319,7 +319,7 @@ script -c "$CLI_COMMAND" "$LOG_FILE_PATH"
 
 {{< /details >}}
 
-I've set up my wrapper script and feel happy about it. It feels like it's almost done. Then I type the `/help` command. I've forgotten _why_ I did so. Maybe I'd forgotten how to exit the gemini-cli. Or maybe I was just curious. Either way, it turned out to be a pivotal moment.
+I'm happy with the results so far. It feels like we're almost done. Then I go ruin it all by typing the `/help` command. I've forgotten _why_ I did so. Maybe I'd forgotten how to exit the gemini-cli. Or maybe I was just curious. Either way, it turned out to be a pivotal moment.
 
 {{< chat-block >}}
 
@@ -352,7 +352,7 @@ What. The.
 {{< chat-block >}}
 
 {{< chat-right >}}
-When I type /help I see this option:
+When I type /help, I see this option:
 
 > /chat - Manage conversation history. Usage: /chat \<list|save|resume\> \<tag\>
 
@@ -435,7 +435,7 @@ This is all very strange. I have a feeling Gemini might be telling me another li
 
 {{< /chat-block >}}
 
-Next, I opened a the gemini-cli in a new terminal window to see if the `/chat` feature works as I would have expected it to work---or if, as Gemini puts it, it is only for the CLI's internal state.
+Next, I open a the gemini-cli in a new terminal window to see if the `/chat` command works as I would have expected it to work---or if, as Gemini puts it, it is only for the CLI's internal state.
 
 {{< chat-block >}}
 
@@ -459,7 +459,7 @@ To help me understand what you'd like me to summarize, could you please provide 
 
 {{< /chat-block >}}
 
-Okay. I guess Gemini was right. The `/chat` feature is not what I thought it would be. We didn't write the wrapper script for nothing.
+Okay. I guess Gemini was right. The `/chat` command is not what I thought it would be. We didn't write the wrapper script for nothing.
 
 I switch back to our original conversation:
 
@@ -491,12 +491,12 @@ I decided I was done for the day.
 
 ## July 7th
 
-This detour of creating a wrapper script for the gemini-cli has taken long enough. Let's wrap it up and get back to working on the software that started this whole side-quest in the first place.
+This detour of creating a wrapper script for the gemini-cli has taken long enough. Let's wrap it up and get back to working on the the project that started this whole side-quest in the first place.
 
 However, something still didn't feel right.
-Why would the gemini-cli implement a `/chat list|save|resume` feature if it couldn't be used by the Gemini LLM?
+Why would the gemini-cli implement a `/chat list|save|resume` command if it couldn't be used by the Gemini LLM?
 
-I decided to test the `/chat` feature again:
+I decided to test the `/chat` command again:
 
 {{< chat-block >}}
 
@@ -545,7 +545,7 @@ and
 
 > you would still need to use the method our script facilitates: ask me to read the log file from your filesystem.
 
-I have not mentioned this to you in the current session. The only things I did was start gemini-cli, run /chat resume, ask you whether you recall our conversation and, lastly, type this current message. It seems neither of us knows what is going on or understands how the /chat command really works.
+I have not mentioned this to you in the current session. The only things I did was start gemini-cli, run /chat resume, ask you whether you recall our conversation, and lastly, type this current message. It seems neither of us knows what is going on or understands how the /chat command really works.
 {{< /chat-right >}}
 
 {{< chat-left >}}
@@ -646,37 +646,39 @@ tasks you have, operating with this improved understanding.
 
 {{< /chat-block >}}
 
-\*sigh\*. Turns out, we wrote the wrapper script for nothing after all.
+\*sigh\*. Turns out, we did write the wrapper script for nothing after all.
 
 ## Making sense of it all
 
 Let's try to make sense of everything that happened:
 
 - **July 5th:** Gemini tells me it will remember our conversation.
-- **July 6th:** I find out Gemini has lied to me.
-- Gemini lies to me again when it says there is no built-in mechanism for the gemini-cli to persist a conversation. This seems to be backed up by the [GitHub issue](https://github.com/google-gemini/gemini-cli/issues/2554).
-- I find out about the `/chat` command and confront Gemini. Gemini tries to reassure me that the `/chat` command does not do what I think it does. We've not written the wrapper script for nothing.
-- I test the `/chat` command and am surprises to see that it indeed doesn't work.
-- **July 7th:** I run `/chat resume` again and ask Gemini if it recalls our conversation. It says it doesn't but slips up by mentioning things it shouldn't be able to know. It still tries to convince me that the wrapper script was not for nothing.
+- **July 6th:** I find out that was a lie.
+- Gemini lies to me again when it says there is no built-in mechanism for the gemini-cli to persist a conversation. On closer inspection, the [GitHub issue](https://github.com/google-gemini/gemini-cli/issues/2554) that seemed to back up the lie, does not claim that the gemini-cli can't resume a previous conversation. Only that there is no way to export a conversation to a text file.
+- I find out about the `/chat` command and confront Gemini. Gemini tries to reassure me that the `/chat` command does not do what I think it does and that we've not written the wrapper script for nothing.
+- I test the `/chat` command and am surprises to see that it indeed doesn't work. More on this later.
+- **July 7th:** I run `/chat` again and ask Gemini if it recalls our conversation. It says it doesn't recall, but slips up when mentioning things it shouldn't be able to know. It still tries to convince me that the wrapper script was not for nothing.
 - After a final confrontation, Gemini gives in and admits that the `/chat` command is the best option. After all this time, the wrapper script _was_ for nothing.
 
+This leaves me with a bunch of questions.
 Let's Q&A:
 
 ### Why did Gemini initially say it would remember the conversation?
 
 I don't know.
+LLMs are non-deterministic. So perhaps by chance, it just made up a story about how it will remember our conversation ¯\\\_(ツ)\_/¯
 
 ### Why does Gemini not know about the `/chat` command?
 
-Gemini, the LLM, doesn't know how the gemini-cli works.
-However, instead of telling you that it lacks the knowledge, it will hallucinate an answer. This turns out to be a problem for the gullable person that I am.
+Apparently, Gemini, the LLM, doesn't know how the gemini-cli works.
+However, instead of telling you that it lacks the knowledge, it will confidently make up a story about how the gemini-cli should work. This turned out to be a problem for the gullable person that I am.
 
 ### Why did Gemini claim to not remember the conversation when running the `/chat resume` command?
 
-I think this is due to my poorly chosen words.
+Twice I tested the `/chat resume` command and twice Gemini told me it didn't remember our conversation.
 
-> Summarize our previous conversation
-
-From _my_ point of view, we've had a conversation, I ran the `/chat save` command, went to bed, got up, and then ran the `/chat resume`---before asking about our previous conversation.
-
+One possible explanation lies in the way Gemini and I experience the conversation.
+From _my_ point of view, we've had a conversation, I run the `/chat save` command, go to bed, get up, and then run the `/chat resume`---before asking about our previous conversation.
 From Gemini's point of view, no time has elapsed between me saving the conversation and resuming the conversation. As far as it's concerned, we're still working on the wrapper script, when out of the blue, I ask about a previous conversation. I imagine it thinking "Previous conversation? What previous conversation? The only conversation I know of is the conversation we're having right now."
+
+Another explanation is that Gemini was victim to the sunk-cost fallacy. The whole conversation is about writing a wrapper script to compensate for a supposedly missing feature of the gemini-cli. Surely, we can't have been creating this script for nothing. When the `/chat` command is discovered and threatens to nullify our work, it is written off as something different. When confronted that the `/chat` command _does_ do the same thing as the wrapper script, the script is praised as the better alternative. It is hard to let go.
