@@ -656,7 +656,7 @@ Let's try to make sense of everything that happened:
 - **July 6th:** I find out that was a lie.
 - Gemini lies to me again when it says there is no built-in mechanism for the gemini-cli to persist a conversation. On closer inspection, the [GitHub issue](https://github.com/google-gemini/gemini-cli/issues/2554) that seemed to back up the lie, does not claim that the gemini-cli can't resume a previous conversation. Only that there is no way to export a conversation to a text file.
 - I find out about the `/chat` command and confront Gemini. Gemini tries to reassure me that the `/chat` command does not do what I think it does and that we've not written the wrapper script for nothing.
-- I test the `/chat` command and am surprises to see that it indeed doesn't work. More on this later.
+- I test the `/chat` command and am surprised to see that it indeed doesn't work. More on this later.
 - **July 7th:** I run the `/chat` command again and ask Gemini if it recalls our conversation. It says it doesn't recall, but slips up when mentioning things it shouldn't be able to know. It still tries to convince me that the wrapper script was not for nothing.
 - After a final confrontation, Gemini gives in and admits that the `/chat` command is the best option. After all this time, the wrapper script _was_ for nothing.
 
