@@ -435,7 +435,7 @@ This is all very strange. I have a feeling Gemini might be telling me another li
 
 {{< /chat-block >}}
 
-Next, I open a the gemini-cli in a new terminal window to see if the `/chat` command works as I would have expected it to work---or if, as Gemini puts it, it is only for the CLI's internal state.
+Next, I open the gemini-cli in a new terminal window to see if the `/chat` command works as I would have expected it to work---or if, as Gemini puts it, it is only for the CLI's internal state.
 
 {{< chat-block >}}
 
@@ -485,7 +485,7 @@ scrollback buffer.
 
 {{< /chat-block >}}
 
-And so I did. I scrolled _all_ the back in my terminal to the moment I started the gemini-cli and copied the content into a log file.
+And so I did. I scrolled _all_ the way back in my terminal to the moment I started the gemini-cli and copied the content into a log file.
 
 I decided I was done for the day.
 
