@@ -657,7 +657,7 @@ Let's try to make sense of everything that happened:
 - Gemini lies to me again when it says there is no built-in mechanism for the gemini-cli to persist a conversation. On closer inspection, the [GitHub issue](https://github.com/google-gemini/gemini-cli/issues/2554) that seemed to back up the lie, does not claim that the gemini-cli can't resume a previous conversation. Only that there is no way to export a conversation to a text file.
 - I find out about the `/chat` command and confront Gemini. Gemini tries to reassure me that the `/chat` command does not do what I think it does and that we've not written the wrapper script for nothing.
 - I test the `/chat` command and am surprises to see that it indeed doesn't work. More on this later.
-- **July 7th:** I run `/chat` again and ask Gemini if it recalls our conversation. It says it doesn't recall, but slips up when mentioning things it shouldn't be able to know. It still tries to convince me that the wrapper script was not for nothing.
+- **July 7th:** I run the `/chat` command again and ask Gemini if it recalls our conversation. It says it doesn't recall, but slips up when mentioning things it shouldn't be able to know. It still tries to convince me that the wrapper script was not for nothing.
 - After a final confrontation, Gemini gives in and admits that the `/chat` command is the best option. After all this time, the wrapper script _was_ for nothing.
 
 This leaves me with a bunch of questions.
@@ -678,7 +678,7 @@ However, instead of telling you that it lacks the knowledge, it will confidently
 Twice I tested the `/chat resume` command and twice Gemini told me it didn't remember our conversation.
 
 One possible explanation lies in the way Gemini and I experience the conversation.
-From _my_ point of view, we've had a conversation, I run the `/chat save` command, go to bed, get up, and then run the `/chat resume`---before asking about our previous conversation.
+From _my_ point of view, we've had a conversation, I run the `/chat save` command, go to bed, get up, and then run the `/chat resume` command---before asking about our previous conversation.
 From Gemini's point of view, no time has elapsed between me saving the conversation and resuming the conversation. As far as it's concerned, we're still working on the wrapper script, when out of the blue, I ask about a previous conversation. I imagine it thinking "Previous conversation? What previous conversation? The only conversation I know of is the conversation we're having right now."
 
 Another explanation is that Gemini was victim to the sunk-cost fallacy. The whole conversation is about writing a wrapper script to compensate for a supposedly missing feature of the gemini-cli. Surely, we can't have been creating this script for nothing. When the `/chat` command is discovered and threatens to nullify our work, it is written off as something different. When confronted that the `/chat` command _does_ do the same thing as the wrapper script, the script is praised as the better alternative. It is hard to let go.
