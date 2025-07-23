@@ -427,9 +427,9 @@ This is all very strange. I have a feeling Gemini might be telling me another li
 
 {{< chat-left >}}
 
-```
+{{< highlight bash "wrapperClass=line-wrap" >}}
 ℹ Conversation checkpoint saved with tag: test-save01.
-```
+{{< /highlight >}}
 
 {{< /chat-left >}}
 
