@@ -1,7 +1,7 @@
 +++
 date = '2025-07-11T21:27:44+02:00'
 draft = true
-title = 'Gaslighted by gemini-cli'
+title = 'Gaslighted by Gemini'
 +++
 
 **gaslight**
