@@ -1,6 +1,5 @@
 baseURL = 'https://www.macabot.com/'
 languageCode = 'en-us'
-# TODO: Delete the ananke submodule
 theme = 'PaperMod'
 title = 'macabot'
 
