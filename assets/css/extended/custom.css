@@ -55,3 +55,30 @@ details[open] summary {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+
+/* PaperMod Dark Mode Overrides */
+[data-theme="dark"] .chat-conversation-container {
+  background-color: #1d2026;
+}
+
+[data-theme="dark"] .chat-left {
+  background-color: #2e3440;
+  color: #e5e9f0;
+}
+
+[data-theme="dark"] .chat-right {
+  background-color: #054740;
+  color: #e9edef;
+}
+
+[data-theme="dark"] .post-content details {
+  border: 1px solid #444;
+}
+
+[data-theme="dark"] .post-content details[open] {
+  border: 1px solid #666;
+}
+
+[data-theme="dark"] .post-content details[open] summary {
+  border-bottom-color: #666;
+}

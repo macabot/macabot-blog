@@ -2,6 +2,7 @@
 date = '2025-07-23T22:22:00+02:00'
 draft = false
 title = 'Gaslighted by Gemini'
+summary = 'On July 5th, I decided to try out the gemini-cli. Then it struck me: will Gemini remember our conversation the next time I continue? I decided to ask it...'
 +++
 
 **gaslight**
