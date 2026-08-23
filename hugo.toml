@@ -1,7 +1,7 @@
 baseURL = 'https://www.macabot.com/'
 languageCode = 'en-us'
 theme = 'PaperMod'
-title = 'macabot'
+title = 'macabot.com'
 
 [markup.goldmark.renderer]
 unsafe = true
