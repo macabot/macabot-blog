@@ -7,4 +7,5 @@ title = 'macabot.com'
 unsafe = true
 
 [params]
+author = "Michael Cabot"
 disableSpecial1stPost = true
